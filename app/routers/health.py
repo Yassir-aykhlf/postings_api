@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from fastapi import JSONResponse
+from fastapi.responses import JSONResponse
 from app.core.db import ping_db
 
 router = APIRouter(tags=["health"])
