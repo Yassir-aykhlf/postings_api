@@ -1,0 +1,1 @@
+"""Postings — production-grade query & endpoint layer over a minimal hiring domain."""

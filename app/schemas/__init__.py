@@ -1,0 +1,1 @@
+"""Wire contracts - Pydantic request/response models"""
