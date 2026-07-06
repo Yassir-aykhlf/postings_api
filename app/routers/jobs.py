@@ -1,19 +1,20 @@
 from datetime import datetime, timezone
 from fastapi import APIRouter, Query
 from app.schemas.job import JobCreate, JobRead
+from app.errors import NotFoundError
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
-@router.get("", summary="List jobs")
+@router.get("")
 async def list_jobs(
-    limit: int = Query(default=20, ge=0, le=1000),
+    limit: int = Query(default=20, ge=0, le=100),
     offset: int = Query(default=0, ge=0)
-    ) ->dict:
-    return {"items": [], "limit": limit, "offset": offset}
+) ->dict:
+    return {"limit": limit, "offset": offset, "items": []}
 
-@router.get("/{job_id}", summary="Fetch a single job")
+@router.get("/{job_id}", response_model=JobRead)
 async def get_job(job_id: int) -> dict:
-    return {"job_id": job_id}
+    raise NotFoundError(f"job {job_id} not found")
 
 @router.post("", response_model=JobRead, status_code=201)
 async def create_job(payload: JobCreate) -> dict:
@@ -24,8 +25,4 @@ async def create_job(payload: JobCreate) -> dict:
         "status": "draft",
         "created_at": now,
         "updated_at": now,
-        # must be stripped
-        "owner_id": 999,
-        "internal_secret": "do not leak",
-        "is_deleted": False
     }
